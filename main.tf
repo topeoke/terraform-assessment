@@ -4,11 +4,7 @@ provider aws {
 }
 
 
-
-}
-
-
-module "vpc" {
+module vpc {
   source = "terraform-aws-modules/vpc/aws"
   name = "Publics Sapient Assessment VPC"
   cidr = "172.16.0.0/16"
@@ -20,5 +16,6 @@ module "vpc" {
   tags = {
     Environment = "Production"
     Client = "Publics Sapient"
+    
   }
 }
