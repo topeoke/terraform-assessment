@@ -106,7 +106,7 @@ resource aws_security_group "backend_instance_sec_group" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "10.0.0.0/8",
+      "172.16.0.0/16",
     ]
   }
 
@@ -136,4 +136,29 @@ resource aws_autoscaling_group "pb-instance-scaling-group" {
     id      = aws_launch_template.backend_auto_scaling_group.id
     version = "$Latest"
   }
+}
+
+resource aws_lb_target_group "pub-sap-lb-tg-instance" {
+  name        = "ps-lb-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = "${module.vpc.vpc_id}"
+}
+
+
+resource aws_lb_listener "pub_sap_front_end" {
+  load_balancer_arn = aws_lb.publics-sapient-alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.pub-sap-lb-tg-instance.arn
+  }
+}
+
+resource aws_autoscaling_attachment "pb_asg_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.pb-instance-scaling-group.id
+  alb_target_group_arn   = aws_lb_target_group.pub-sap-lb-tg-instance.arn
 }
