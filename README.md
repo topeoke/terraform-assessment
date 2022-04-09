@@ -1,1 +1,1 @@
-# terraform-smaple-code
+# terraform-sample-code
