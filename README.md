@@ -1,1 +1,1 @@
-# terraform-assessment
+# terraform-smaple-code
